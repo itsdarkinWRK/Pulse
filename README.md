@@ -1,104 +1,54 @@
-# Pulse — Windows FPS Booster & Rendszeroptimalizáló
+# ⚡ Pulse
 
-Prémium, sötét témájú WPF alkalmazás Windows 10/11 x64 rendszerekhez.
-**.NET 8**, **0 NuGet-függőség**, rendszergazdai jogot kérő `app.manifest`.
+> A modern, lightning-fast Windows optimization & FPS booster utility designed for gamers and power users. Clean UI, zero bloat, and maximum performance.
 
-> **Figyelmeztetés:** a program rendszerszintű registry- és szolgáltatásmódosításokat végez.
-> Használat előtt készíts biztonsági mentést (a program automatikusan készít snapshotot),
-> és érdemes egy Windows rendszer-visszaállítási pontot is létrehoznod.
+![Pulse Dashboard](link-to-screenshot.png) <!-- Ide beszúrhatsz egy képernyőképet a szoftverről -->
+
+## ✨ Features
+
+### 🚀 1. Performance & CPU
+* **Ultimate Power Plan:** Unlocks and activates Windows' hidden high-performance power plan to eliminate core parking and micro-stutters.
+* **GPU Priority & Scheduling:** Forces high multimedia scheduling priority (`GPU Priority = 8`, `Priority = 6`) for games.
+* **Disable Power Throttling & Core Parking:** Keeps your CPU cores fully awake and prevents Windows from down-clocking background gaming processes.
+* **Hardware GPU Scheduling (HAGS) & Game Mode:** Lowers system latency and ensures priority resource allocation.
+
+### 🎛️ 2. Services & Bloatware Control
+* **Smart Service Management:** Safely stops and disables resource-heavy background services like `SysMain` (Superfetch), `DiagTrack` (Telemetry), and `WSearch`.
+* **App Removal:** Easily scan and remove pre-installed Windows Store bloatware apps.
+
+### 🌐 3. Network & Latency Reduction
+* **Disable Nagle's Algorithm:** Forces immediate TCP acknowledgments on active adapters to reduce packet jitter and ping in competitive games.
+* **Network Throttling Index:** Removes multimedia network throttling to prioritize game data packets.
+* **Maximum Wi-Fi / LAN Performance:** Disables energy-saving states on network adapters.
+
+### 🧹 4. Maintenance & Cleanup
+* **One-Shot Cleanup Cards:** Safely clears `%TEMP%`, Windows Temp logs, update caches, and shader caches (DirectX/NVIDIA/AMD) to free up storage and fix stuttering.
+* **Recycle Bin Fast Purge:** Instantly empties the recycle bin without confirmation flags.
+
+### 🎨 5. Visual & Advanced Tweaks
+* **Best Performance Visuals:** Disables heavy Windows animations, transparency, and aero effects for a snappier interface.
+* **Advanced I/O & Memory Tweaks:** Enables `LargeSystemCache`, optimizes NTFS file behavior, and disables unnecessary metadata writing (`NtfsDisableLastAccessUpdate`).
 
 ---
 
-## Projektszerkezet
+## 🎨 UI & Design Philosophy
+* **Modern Dark Mode:** Built with sleek matte dark grey / midnight black tones and a vibrant, crisp cyan accent color.
+* **Zero AI Slop:** No cluttered interfaces, fake memory boosters, or unnecessary flashing animations — just pure, functional design with a professional gamer aesthetic.
+* **Live System Telemetry:** Real-time logging console and live resource monitoring for CPU, RAM, and GPU.
 
-```
-Pulse/
-├─ Pulse.csproj          # net8.0-windows, WPF, single-file publish
-├─ app.manifest               # requireAdministrator + PerMonitorV2 DPI
-├─ App.xaml / App.xaml.cs     # belépés, admin-check, globális kivételkezelés
-├─ MainWindow.xaml / .cs      # UI: navigáció, kapcsolók, élő napló, telemetria
-├─ Themes/
-│  └─ Dark.xaml               # teljes dark téma (ecsetek + control template-ek)
-├─ Models/
-│  ├─ LogEntry.cs             # naplórekord, állapotok, BoostSummary
-│  ├─ SettingItem.cs          # egy kapcsoló a felületen (INotifyPropertyChanged)
-│  └─ AppConfig.cs            # %ProgramData%\Pulse\config.json
-├─ Core/
-│  ├─ RegToggle.cs            # RegistryTuner + RegistryCatalog + snapshot/restore
-│  ├─ ProcessRunner.cs        # rejtett, időkorlátos powercfg/sc/reg futtatás
-│  ├─ AppLogger.cs            # valós idejű + fájl naplózás
-│  ├─ NativeMethods.cs        # Win32 P/Invoke (EmptyWorkingSet, ntdll, token…)
-│  └─ OptimizerEngine.cs      # facade: kapcsolók, boost, visszaállítás, felmérés
-└─ Services/
-   ├─ BackupManager.cs        # snapshot.json + reg export/import + visszaállítás
-   ├─ PowerPlanService.cs     # Ultimate Performance terv + powercfg hangolás
-   ├─ WindowsServiceManager.cs# SysMain / DiagTrack / dmwappush / WSearch / Xbox
-   ├─ PerformanceOptimizer.cs # GPU priority, PowerThrottling, GameMode, core parking, HAGS
-   ├─ NetworkOptimizer.cs     # Nagle tiltás csatolónként + NetworkThrottlingIndex
-   ├─ VisualEffectsService.cs # „Legjobb teljesítmény” effektek
-   ├─ CleanupService.cs       # temp/gyorsítótár törlés, Lomtár
-   ├─ MemoryOptimizer.cs      # EmptyWorkingSet + standby list purge
-   └─ TelemetryService.cs     # CPU / GPU / RAM / előtérben lévő folyamat
-```
+---
 
-## Funkciók
+## 🛠️ Built With
+* **Language:** C# (.NET / WPF)
+* **Architecture:** Modular optimization engine with safe Registry & PowerShell/Command-line execution.
 
-| # | Funkció | Megvalósítás |
-|---|---------|--------------|
-| 1 | Biztonsági mentés és visszaállítás | `BackupManager` — `snapshot.json` (értékszintű) + `registry\*.reg` (reg export) + `services.json` + `power.json` |
-| 2 | Teljesítmény és CPU | Ultimate Power Plan, GPU Priority=8 a Games profilban, `PowerThrottlingOff=1`, Game Mode, Core Parking (`ValueMin=100` + `CPMINCORES 100`), `Win32PrioritySeparation=0x26`, HAGS |
-| 3 | Szolgáltatások | `sc stop` + `sc config … start= disabled` — SysMain, DiagTrack, dmwappushservice; opcionálisan WSearch és Xbox |
-| 4 | Hálózat / latency | `TcpAckFrequency=1`, `TCPNoDelay=1` minden csatolón; `NetworkThrottlingIndex=0xFFFFFFFF`, `SystemResponsiveness=10` |
-| 5 | Tisztítás / RAM | `%TEMP%`, `C:\Windows\Temp`, WU-cache, Prefetch, shader cache, Lomtár; `EmptyWorkingSet` + standby list purge |
-| 6 | Vizuális effektek | `VisualFXSetting=2`, `UserPreferencesMask`, animációk, átlátszóság, Aero Peek kikapcsolva |
+---
 
-## Fordítás
+## ⚠️ Disclaimer
+Use at your own discretion.
 
-```
-# 1) .NET 8 SDK szükséges
-dotnet --list-sdks
+---
 
-# 2) build
-dotnet build -c Release
-
-# 3) egyetlen, self-contained exe
-dotnet publish -c Release -r win-x64 --self-contained true `
-  -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true `
-  -p:EnableCompressionInSingleFile=true
-```
-
-A kész exe: `bin\Release\net8.0-windows\win-x64\publish\Pulse.exe`
-Indításkor a manifest miatt automatikusan UAC-prompt jelenik meg.
-
-## Fájlok, amiket a program ír
-
-- `%ProgramData%\Pulse\config.json` — kapcsoló-állapotok, eredeti szolgáltatás-típusok
-- `%ProgramData%\Pulse\Backups\<dátum>\` — snapshot.json, registry\*.reg, services.json, power.json, meta.json
-- `%ProgramData%\Pulse\logs\pulse-<dátum>.log` — futási napló
-
-## Kézi visszaállítás (ha a program nem indul)
-
-```
-# a legutóbbi mentés mappa
-dir "%ProgramData%\Pulse\Backups"
-
-# értékek visszaállítása (rendszergazdai parancssorban)
-reg import "%ProgramData%\Pulse\Backups\<dátum>\registry\power.reg" /reg:64
-sc config SysMain start= auto
-sc config DiagTrack start= auto
-powercfg -setactive 381b4222-f694-41f0-9685-ff5bb260df2e
-```
-
-## Ismert korlátok
-
-- A **HAGS** (`HwSchMode=2`) újraindítás után lép életbe, és régebbi GPU-kon nem támogatott.
-- A **Game DVR** kikapcsolása letiltja az Xbox Game Bar háttérfelvételét.
-- A **WSearch / Xbox** szolgáltatások alapértelmezetten ki vannak kapcsolva a listában (kockázatos csoport),
-  és bekapcsolásukkor a program megerősítést kér.
-- **GPU-számlálók** hiányozhatnak virtualizált környezetben — ilyenkor a GPU mező 0%-ot mutat.
-- Vállalati környezetben a DiagTrack letiltása ütközhet csoportházirenddel.
-
-## Licenc
-
-MIT — szabadon módosítható és terjeszthető. A használatból eredő károkért
-a szerző felelősséget nem vállal.
+## 💬 Support / Buy Me a Coffee
+If you like **Pulse** and want to support my late-night coding sessions and open-source development, you can buy me a coffee here:
+👉 **[Buy Me a Coffee Link]**

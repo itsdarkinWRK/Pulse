@@ -2,7 +2,8 @@
 
 > A modern, lightning-fast Windows optimization & FPS booster utility designed for gamers and power users. Clean UI, zero bloat, and maximum performance.
 
-![Pulse Dashboard](link-to-screenshot.png) <!-- Ide beszúrhatsz egy képernyőképet a szoftverről -->
+![Pulse Dashboard](link-to-screenshot.png) <!-- Ide beszúrhatsz egy képernyőképet a szoftverről --><img width="1313" height="815" alt="image" src="https://github.com/user-attachments/assets/e82f3484-47da-4068-8ace-4224ee6a76d7" />
+
 
 ## ✨ Features
 

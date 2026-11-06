@@ -34,7 +34,6 @@
 
 ## 🎨 UI & Design Philosophy
 * **Modern Dark Mode:** Built with sleek matte dark grey / midnight black tones and a vibrant, crisp cyan accent color.
-* **Zero AI Slop:** No cluttered interfaces, fake memory boosters, or unnecessary flashing animations — just pure, functional design with a professional gamer aesthetic.
 * **Live System Telemetry:** Real-time logging console and live resource monitoring for CPU, RAM, and GPU.
 
 ---
@@ -52,4 +51,4 @@ Use at your own discretion.
 
 ## 💬 Support / Buy Me a Coffee
 If you like **Pulse** and want to support my late-night coding sessions and open-source development, you can buy me a coffee here:
-👉 **[Buy Me a Coffee Link]**
+👉 **[Buy Me a Coffee](https://www.buymeacoffee.com/darkin)**
